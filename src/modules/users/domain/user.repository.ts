@@ -16,4 +16,5 @@ export abstract class UserRepository {
         role?: ChurchRole;
         churchId: string;
     }): Promise<User>;
+    abstract updateRole(id: string, churchId: string, role: ChurchRole): Promise<User>;
 }

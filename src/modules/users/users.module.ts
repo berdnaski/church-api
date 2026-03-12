@@ -7,6 +7,7 @@ import { ListUsersUseCase } from './application/list-users.usecase';
 import { FindUserByIdUseCase } from './application/find-user-by-id.usecase';
 import { UpdateUserUseCase } from './application/update-user.usecase';
 import { DeleteUserUseCase } from './application/delete-user.usecase';
+import { UpdateRoleUserUseCase } from './application/update-role-user.usecase';
 import { UsersController } from './users.controller';
 
 @Module({
@@ -19,6 +20,7 @@ import { UsersController } from './users.controller';
         FindUserByIdUseCase,
         UpdateUserUseCase,
         DeleteUserUseCase,
+        UpdateRoleUserUseCase,
     ],
     exports: [
         UserRepository,
@@ -28,6 +30,7 @@ import { UsersController } from './users.controller';
         FindUserByIdUseCase,
         UpdateUserUseCase,
         DeleteUserUseCase,
+        UpdateRoleUserUseCase,
     ],
 })
 export class UsersModule { }

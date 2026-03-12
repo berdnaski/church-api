@@ -46,4 +46,8 @@ export class UserRepositoryImpl extends BaseTenantRepository<User> implements Us
             },
         }) as Promise<User>;
     }
+
+    async updateRole(id: string, churchId: string, role: ChurchRole): Promise<User> {
+        return this.updateByTenant(this.prisma.user, id, churchId, { role }) as Promise<User>;
+    }
 }

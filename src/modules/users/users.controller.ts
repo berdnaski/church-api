@@ -11,8 +11,12 @@ import { DeleteUserUseCase } from './application/delete-user.usecase';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { PaginatedResultDto } from 'src/shared/pagination/paginated-result.dto';
-import { IsAdminOrSelf } from 'src/shared/decorators/roles.decorator';
+import { IsAdminOrSelf, Roles } from 'src/shared/decorators/roles.decorator';
 import { AdminOrSelfGuard } from 'src/shared/guards/admin-or-self.guard';
+import { RolesGuard } from 'src/shared/guards/roles.guard';
+import { UpdateRoleUserUseCase } from './application/update-role-user.usecase';
+import { UpdateRoleDto } from './dto/update-role.dto';
+import { ChurchRole } from '@prisma/client';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -24,6 +28,7 @@ export class UsersController {
         private readonly findUserByIdUseCase: FindUserByIdUseCase,
         private readonly updateUserUseCase: UpdateUserUseCase,
         private readonly deleteUserUseCase: DeleteUserUseCase,
+        private readonly updateRoleUserUseCase: UpdateRoleUserUseCase,
     ) { }
 
     @Get('me')
@@ -79,5 +84,18 @@ export class UsersController {
         @CurrentUser() user: AuthUserPayload
     ) {
         await this.deleteUserUseCase.execute(id, user.churchId, user.userId, user.role);
+    }
+
+    @Patch(':id/role')
+    @Roles(ChurchRole.ADMIN, ChurchRole.OWNER)
+    @ApiOperation({ summary: 'Update a user role' })
+    @ApiResponse({ status: 200, type: UserResponseDto })
+    async updateRole(
+        @Param('id') id: string,
+        @CurrentUser() user: AuthUserPayload,
+        @Body() dto: UpdateRoleDto
+    ) {
+        const updated = await this.updateRoleUserUseCase.execute(id, user.churchId, dto);
+        return UserResponseDto.fromEntity(updated);
     }
 }
