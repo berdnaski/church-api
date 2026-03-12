@@ -17,4 +17,8 @@ export abstract class UserRepository {
         churchId: string;
     }): Promise<User>;
     abstract updateRole(id: string, churchId: string, role: ChurchRole): Promise<User>;
+    abstract createResetToken(userId: string, token: string, expiresAt: Date): Promise<void>;
+    abstract findByResetToken(token: string): Promise<{ user: User } | null>;
+    abstract updatePassword(id: string, passwordHash: string): Promise<void>;
+    abstract invalidateToken(token: string): Promise<void>;
 }

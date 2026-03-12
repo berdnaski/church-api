@@ -4,12 +4,20 @@ import { AuthService } from './auth.service';
 import { RegisterChurchDto } from './dto/register-church.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Public } from 'src/shared/decorators/public.decorator';
+import { ForgotPasswordUseCase } from 'src/modules/users/application/forgot-password.usecase';
+import { ResetPasswordUseCase } from 'src/modules/users/application/reset-password.usecase';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) { }
+    constructor(
+        private readonly authService: AuthService,
+        private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
+        private readonly resetPasswordUseCase: ResetPasswordUseCase,
+    ) { }
 
     @Public()
     @Post('register-church')
@@ -31,5 +39,21 @@ export class AuthController {
     @ApiOperation({ summary: 'Authenticate user' })
     async login(@Body() dto: LoginDto) {
         return this.authService.login(dto);
+    }
+
+    @Public()
+    @Post('forgot-password')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Request password reset email' })
+    async forgotPassword(@Body() dto: ForgotPasswordDto) {
+        return this.forgotPasswordUseCase.execute(dto.email);
+    }
+
+    @Public()
+    @Post('reset-password')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Reset password using token' })
+    async resetPassword(@Body() dto: ResetPasswordDto) {
+        return this.resetPasswordUseCase.execute(dto.token, dto.newPassword);
     }
 }

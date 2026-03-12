@@ -8,9 +8,13 @@ import { FindUserByIdUseCase } from './application/find-user-by-id.usecase';
 import { UpdateUserUseCase } from './application/update-user.usecase';
 import { DeleteUserUseCase } from './application/delete-user.usecase';
 import { UpdateRoleUserUseCase } from './application/update-role-user.usecase';
+import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
+import { ResetPasswordUseCase } from './application/reset-password.usecase';
 import { UsersController } from './users.controller';
+import { EmailModule } from 'src/shared/email/email.module';
 
 @Module({
+    imports: [EmailModule],
     controllers: [UsersController],
     providers: [
         { provide: UserRepository, useClass: UserRepositoryImpl },
@@ -21,6 +25,8 @@ import { UsersController } from './users.controller';
         UpdateUserUseCase,
         DeleteUserUseCase,
         UpdateRoleUserUseCase,
+        ForgotPasswordUseCase,
+        ResetPasswordUseCase,
     ],
     exports: [
         UserRepository,
@@ -31,6 +37,8 @@ import { UsersController } from './users.controller';
         UpdateUserUseCase,
         DeleteUserUseCase,
         UpdateRoleUserUseCase,
+        ForgotPasswordUseCase,
+        ResetPasswordUseCase,
     ],
 })
 export class UsersModule { }
