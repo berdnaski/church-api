@@ -37,6 +37,9 @@ export class RegisterChurchUseCase {
                 data: {
                     name: dto.churchName,
                     slug: dto.churchSlug,
+                    address: dto.address,
+                    phone: dto.phone,
+                    description: dto.description,
                 },
             });
 

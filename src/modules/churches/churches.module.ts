@@ -5,6 +5,7 @@ import { ChurchesController } from './churches.controller';
 import { ChurchRepository } from './domain/church.repository';
 import { ChurchRepositoryImpl } from './infrastructure/church.repository.impl';
 import { DeleteChurchUseCase } from './application/delete-church.usecase';
+import { UpdateChurchUseCase } from './application/update-church.usecase';
 
 @Module({
     controllers: [ChurchesController],
@@ -12,6 +13,7 @@ import { DeleteChurchUseCase } from './application/delete-church.usecase';
         RegisterChurchUseCase,
         FindChurchByIdUseCase,
         DeleteChurchUseCase,
+        UpdateChurchUseCase,
         {
             provide: ChurchRepository,
             useClass: ChurchRepositoryImpl,
