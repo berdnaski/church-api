@@ -1,5 +1,5 @@
 import { ChurchRole } from '@prisma/client';
-import { User } from './user.entity';
+import { User, UserProfile } from './user.entity';
 import { PaginatedResultDto } from 'src/shared/pagination/paginated-result.dto';
 import { PaginationParamsDto } from 'src/shared/pagination/pagination-params.dto';
 
@@ -21,4 +21,5 @@ export abstract class UserRepository {
     abstract findByResetToken(token: string): Promise<{ user: User } | null>;
     abstract updatePassword(id: string, passwordHash: string): Promise<void>;
     abstract invalidateToken(token: string): Promise<void>;
+    abstract updateProfile(userId: string, data: Partial<UserProfile>): Promise<User>;
 }

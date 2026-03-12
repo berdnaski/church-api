@@ -31,6 +31,26 @@ model Church {
   users User[]
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  DIVORCED
+  WIDOWED
+  STABLE_UNION
+}
+
+enum BaptismStatus {
+  NOT_BAPTIZED
+  BAPTIZED
+  WAITING
+}
+
 model User {
   id        String     @id @default(uuid())
   name      String
@@ -46,7 +66,39 @@ model User {
   church   Church @relation(fields: [churchId], references: [id])
 
   passwordResets PasswordReset[]
+  profile        UserProfile?
 }
+
+model UserProfile {
+  id            String         @id @default(uuid())
+  userId        String         @unique
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  phone         String?
+  birthDate     DateTime?
+  gender        Gender?
+  maritalStatus MaritalStatus? @default(SINGLE)
+  cpf           String?        @unique
+  photoUrl      String?
+
+  baptismStatus BaptismStatus  @default(NOT_BAPTIZED)
+  baptismDate   DateTime?
+  memberSince   DateTime?      @default(now())
+
+  zipCode       String?
+  street        String?
+  number        String?
+  complement    String?
+  neighborhood  String?
+  city          String?
+  state         String?
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@map("user_profiles")
+}
+
 
 model PasswordReset {
   id        String   @id @default(uuid())

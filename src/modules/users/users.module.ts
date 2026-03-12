@@ -10,6 +10,7 @@ import { DeleteUserUseCase } from './application/delete-user.usecase';
 import { UpdateRoleUserUseCase } from './application/update-role-user.usecase';
 import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
 import { ResetPasswordUseCase } from './application/reset-password.usecase';
+import { UpdateUserProfileUseCase } from './application/update-user-profile.usecase';
 import { UsersController } from './users.controller';
 import { EmailModule } from 'src/shared/email/email.module';
 
@@ -27,6 +28,7 @@ import { EmailModule } from 'src/shared/email/email.module';
         UpdateRoleUserUseCase,
         ForgotPasswordUseCase,
         ResetPasswordUseCase,
+        UpdateUserProfileUseCase,
     ],
     exports: [
         UserRepository,
@@ -39,6 +41,7 @@ import { EmailModule } from 'src/shared/email/email.module';
         UpdateRoleUserUseCase,
         ForgotPasswordUseCase,
         ResetPasswordUseCase,
+        UpdateUserProfileUseCase,
     ],
 })
 export class UsersModule { }

@@ -14,11 +14,17 @@ export class UserRepositoryImpl extends BaseTenantRepository<User> implements Us
     }
 
     async findByEmail(email: string): Promise<User | null> {
-        return this.prisma.user.findUnique({ where: { email } }) as Promise<User | null>;
+        return this.prisma.user.findUnique({
+            where: { email },
+            include: { profile: true }
+        }) as Promise<User | null>;
     }
 
     async findById(id: string, churchId: string): Promise<User | null> {
-        return this.findOneByTenant(this.prisma.user, id, churchId) as Promise<User | null>;
+        return this.prisma.user.findFirst({
+            where: { id, churchId, deletedAt: null },
+            include: { profile: true }
+        }) as Promise<User | null>;
     }
 
     async list(churchId: string, params: PaginationParamsDto): Promise<PaginatedResultDto<User>> {
@@ -84,5 +90,21 @@ export class UserRepositoryImpl extends BaseTenantRepository<User> implements Us
         await this.prisma.passwordReset.deleteMany({
             where: { token },
         });
+    }
+
+    async updateProfile(userId: string, data: any): Promise<User> {
+        const user = await this.prisma.user.update({
+            where: { id: userId },
+            data: {
+                profile: {
+                    upsert: {
+                        create: data,
+                        update: data,
+                    },
+                },
+            },
+            include: { profile: true },
+        });
+        return user as unknown as User;
     }
 }

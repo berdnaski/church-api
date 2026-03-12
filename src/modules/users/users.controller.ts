@@ -18,6 +18,9 @@ import { UpdateRoleUserUseCase } from './application/update-role-user.usecase';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { ChurchRole } from '@prisma/client';
 
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
+import { UpdateUserProfileUseCase } from './application/update-user-profile.usecase';
+
 @ApiTags('users')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -29,6 +32,7 @@ export class UsersController {
         private readonly updateUserUseCase: UpdateUserUseCase,
         private readonly deleteUserUseCase: DeleteUserUseCase,
         private readonly updateRoleUserUseCase: UpdateRoleUserUseCase,
+        private readonly updateUserProfileUseCase: UpdateUserProfileUseCase,
     ) { }
 
     @Get('me')
@@ -37,6 +41,17 @@ export class UsersController {
     async getMe(@CurrentUser() user: AuthUserPayload) {
         const found = await this.findUserByIdUseCase.execute(user.userId, user.churchId);
         return UserResponseDto.fromEntity(found);
+    }
+
+    @Patch('me/profile')
+    @ApiOperation({ summary: 'Update my detailed profile' })
+    @ApiResponse({ status: 200, type: UserResponseDto })
+    async updateMeProfile(
+        @CurrentUser() user: AuthUserPayload,
+        @Body() dto: UpdateUserProfileDto
+    ) {
+        const updated = await this.updateUserProfileUseCase.execute(user.userId, user.churchId, dto);
+        return UserResponseDto.fromEntity(updated);
     }
 
     @Get()

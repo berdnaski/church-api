@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ChurchRole } from '@prisma/client';
 import { User } from '../domain/user.entity';
+import { UserProfileDto } from './user-profile.dto';
 
 export class UserResponseDto {
     @ApiProperty()
@@ -21,6 +22,9 @@ export class UserResponseDto {
     @ApiProperty()
     isActive: boolean;
 
+    @ApiPropertyOptional({ type: UserProfileDto })
+    profile?: UserProfileDto;
+
     @ApiProperty()
     createdAt: Date;
 
@@ -33,6 +37,11 @@ export class UserResponseDto {
         dto.churchId = user.churchId;
         dto.isActive = user.isActive;
         dto.createdAt = user.createdAt;
+        
+        if (user.profile) {
+            dto.profile = UserProfileDto.fromEntity(user.profile);
+        }
+        
         return dto;
     }
 }
