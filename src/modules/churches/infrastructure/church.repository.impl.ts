@@ -27,4 +27,14 @@ export class ChurchRepositoryImpl extends BaseTenantRepository<Church> implement
             data
         }) as Promise<Church>;
     }
+
+    async delete(id: string): Promise<Church> {
+        return this.prisma.church.update({
+            where: { id },
+            data: {
+                deletedAt: new Date(),
+                isActive: false
+            }
+        }) as Promise<Church>;
+    }
 }
