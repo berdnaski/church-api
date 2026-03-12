@@ -23,6 +23,7 @@ model Church {
   phone       String?
   email       String?
   description String?
+  logoUrl     String?
   deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

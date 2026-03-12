@@ -6,4 +6,5 @@ export abstract class ChurchRepository {
     abstract create(data: { name: string; slug: string }): Promise<Church>;
     abstract delete(id: string): Promise<Church>;
     abstract update(id: string, data: Partial<Church>): Promise<Church>;
+    abstract updateLogo(id: string, logoUrl: string): Promise<Church>;
 }

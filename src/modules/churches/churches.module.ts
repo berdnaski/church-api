@@ -6,14 +6,18 @@ import { ChurchRepository } from './domain/church.repository';
 import { ChurchRepositoryImpl } from './infrastructure/church.repository.impl';
 import { DeleteChurchUseCase } from './application/delete-church.usecase';
 import { UpdateChurchUseCase } from './application/update-church.usecase';
+import { UploadChurchLogoUseCase } from './application/upload-church-logo.usecase';
+import { StorageModule } from 'src/shared/infrastructure/storage.module';
 
 @Module({
+    imports: [StorageModule],
     controllers: [ChurchesController],
     providers: [
         RegisterChurchUseCase,
         FindChurchByIdUseCase,
         DeleteChurchUseCase,
         UpdateChurchUseCase,
+        UploadChurchLogoUseCase,
         {
             provide: ChurchRepository,
             useClass: ChurchRepositoryImpl,

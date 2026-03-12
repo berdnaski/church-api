@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/core/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/shared/decorators/current-user.decorator';
 import type { AuthUserPayload } from 'src/shared/decorators/current-user.decorator';
@@ -11,6 +12,7 @@ import { ChurchRole } from '@prisma/client';
 import { DeleteChurchUseCase } from './application/delete-church.usecase';
 import { UpdateChurchDto } from './dto/update-church.dto';
 import { UpdateChurchUseCase } from './application/update-church.usecase';
+import { UploadChurchLogoUseCase } from './application/upload-church-logo.usecase';
 
 @ApiTags('churches')
 @ApiBearerAuth()
@@ -20,7 +22,8 @@ export class ChurchesController {
     constructor(
         private readonly findChurchByIdUseCase: FindChurchByIdUseCase,
         private readonly deleteChurchUseCase: DeleteChurchUseCase,
-        private readonly updateChurchUseCase: UpdateChurchUseCase
+        private readonly updateChurchUseCase: UpdateChurchUseCase,
+        private readonly uploadChurchLogoUseCase: UploadChurchLogoUseCase,
     ) { }
 
     @Get('me')
@@ -60,5 +63,22 @@ export class ChurchesController {
         @Body() dto: UpdateChurchDto
     ) {
         return this.updateChurchUseCase.execute(id, dto);
+    }
+
+    @Patch(':id/logo')
+    @IsAdminOrSelf()
+    @Roles(ChurchRole.OWNER, ChurchRole.PASTOR, ChurchRole.ADMIN)
+    @UseGuards(RolesGuard, AdminOrSelfGuard)
+    @UseInterceptors(FileInterceptor('file', { storage: undefined }))
+    @ApiOperation({ summary: 'Upload church logo' })
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({ schema: { type: 'object', properties: { file: { type: 'string', format: 'binary' } } } })
+    @ApiResponse({ status: 200, description: 'Logo uploaded successfully' })
+    async uploadLogo(
+        @Param('id') id: string,
+        @CurrentUser() user: AuthUserPayload,
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        return this.uploadChurchLogoUseCase.execute(id, file);
     }
 }

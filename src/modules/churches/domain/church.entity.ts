@@ -7,6 +7,7 @@ export class Church {
     phone: string | null;
     email: string | null;
     description: string | null;
+    logoUrl: string | null;
     deletedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;

@@ -41,4 +41,11 @@ export class ChurchRepositoryImpl implements ChurchRepository {
             data,
         }) as unknown as Promise<Church>;
     }
+
+    async updateLogo(id: string, logoUrl: string): Promise<Church> {
+        return this.prisma.church.update({
+            where: { id },
+            data: { logoUrl },
+        }) as unknown as Promise<Church>;
+    }
 }

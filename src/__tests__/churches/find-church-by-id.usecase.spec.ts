@@ -11,6 +11,7 @@ const makeChurch = (overrides: Partial<Church> = {}): Church => ({
     phone: null,
     email: null,
     description: null,
+    logoUrl: null,
     deletedAt: null,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -19,25 +20,38 @@ const makeChurch = (overrides: Partial<Church> = {}): Church => ({
 
 describe('FindChurchByIdUseCase', () => {
     const findById = jest.fn();
+    const getUrl = jest.fn();
     const repo: any = { findById };
-    const useCase = new FindChurchByIdUseCase(repo);
+    const storageService: any = { getUrl };
+    const useCase = new FindChurchByIdUseCase(repo, storageService);
 
     afterEach(() => jest.clearAllMocks());
 
-    it('should return the church when found', async () => {
-        const church = makeChurch();
-        findById.mockResolvedValue(church);
+    it('should return the church without logoSignedUrl when no logo exists', async () => {
+        findById.mockResolvedValue(makeChurch());
 
         const result = await useCase.execute('church-1');
 
-        expect(result).toEqual(church);
-        expect(findById).toHaveBeenCalledWith('church-1');
+        expect(result.id).toBe('church-1');
+        expect(result.logoSignedUrl).toBeNull();
+        expect(getUrl).not.toHaveBeenCalled();
+    });
+
+    it('should return the church with logoSignedUrl when logo exists', async () => {
+        const church = makeChurch({ logoUrl: 'logos/uuid-logo.png' });
+        findById.mockResolvedValue(church);
+        getUrl.mockResolvedValue({ signedUrl: 'https://r2.example.com/logos/uuid-logo.png?sig=abc' });
+
+        const result = await useCase.execute('church-1');
+
+        expect(result.logoSignedUrl).toBe('https://r2.example.com/logos/uuid-logo.png?sig=abc');
+        expect(getUrl).toHaveBeenCalledWith('logos/uuid-logo.png');
     });
 
     it('should throw NotFoundException when church does not exist', async () => {
         findById.mockResolvedValue(null);
 
         await expect(useCase.execute('missing-id')).rejects.toThrow(NotFoundException);
-        expect(findById).toHaveBeenCalledWith('missing-id');
+        expect(getUrl).not.toHaveBeenCalled();
     });
 });
