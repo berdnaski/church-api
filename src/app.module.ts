@@ -7,6 +7,8 @@ import { AuthModule } from './core/auth/auth.module';
 import { ChurchesModule } from './modules/churches/churches.module';
 import { UsersModule } from './modules/users/users.module';
 import { JwtAuthGuard } from './core/auth/jwt/jwt.guard';
+import { RolesGuard } from './shared/guards/roles.guard';
+import { AdminOrSelfGuard } from './shared/guards/admin-or-self.guard';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { JwtAuthGuard } from './core/auth/jwt/jwt.guard';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    RolesGuard,
+    AdminOrSelfGuard,
   ],
 })
 export class AppModule { }
