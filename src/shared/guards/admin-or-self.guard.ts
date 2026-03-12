@@ -27,7 +27,7 @@ export class AdminOrSelfGuard implements CanActivate {
         }
 
         const isAdmin = ([ChurchRole.OWNER, ChurchRole.PASTOR, ChurchRole.ADMIN] as ChurchRole[]).includes(user.role);
-        const isSelf = targetId === user.userId;
+        const isSelf = targetId === user.userId || targetId === user.churchId;
 
         if (isAdmin || isSelf) {
             return true;
