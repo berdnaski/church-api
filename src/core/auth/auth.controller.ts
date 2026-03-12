@@ -13,14 +13,14 @@ export class AuthController {
 
     @Public()
     @Post('register-church')
-    @ApiOperation({ summary: 'Registrar nova igreja e usuário owner' })
+    @ApiOperation({ summary: 'New church registrar and owner user.' })
     async registerChurch(@Body() dto: RegisterChurchDto) {
         return this.authService.registerChurch(dto);
     }
 
     @Public()
     @Post('register')
-    @ApiOperation({ summary: 'Registrar novo usuário em uma igreja via slug' })
+    @ApiOperation({ summary: 'Registering a new user in a church via slug' })
     async register(@Body() dto: RegisterUserDto) {
         return this.authService.registerUser(dto);
     }
@@ -28,7 +28,7 @@ export class AuthController {
     @Public()
     @Post('login')
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Autenticar usuário' })
+    @ApiOperation({ summary: 'Authenticate user' })
     async login(@Body() dto: LoginDto) {
         return this.authService.login(dto);
     }
