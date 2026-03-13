@@ -9,6 +9,7 @@ import { UsersModule } from './modules/users/users.module';
 import { JwtAuthGuard } from './core/auth/jwt/jwt.guard';
 import { RolesGuard } from './shared/guards/roles.guard';
 import { AdminOrSelfGuard } from './shared/guards/admin-or-self.guard';
+import { DepartmentsModule } from './modules/departments/departments.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AdminOrSelfGuard } from './shared/guards/admin-or-self.guard';
     ChurchesModule,
     UsersModule,
     AuthModule,
+    DepartmentsModule,
   ],
   providers: [
     {
