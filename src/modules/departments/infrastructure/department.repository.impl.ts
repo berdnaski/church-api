@@ -4,6 +4,8 @@ import { Department } from "../domain/department.entity";
 import { DepartmentRepository, CreateDepartmentInput } from "../domain/department.repository";
 import { PrismaService } from "src/core/database/prisma.service";
 import { DepartmentRole } from "@prisma/client";
+import { PaginationParamsDto } from "src/shared/pagination/pagination-params.dto";
+import { PaginatedResultDto } from "src/shared/pagination/paginated-result.dto";
 
 @Injectable()
 export class DepartmentRepositoryImpl extends BaseTenantRepository<Department> implements DepartmentRepository {
@@ -30,5 +32,9 @@ export class DepartmentRepositoryImpl extends BaseTenantRepository<Department> i
         return this.prisma.department.findFirst({
             where: { name, churchId, deletedAt: null }
         });
+    }
+
+    async list(churchId: string, params: PaginationParamsDto): Promise<PaginatedResultDto<Department>> {
+        return this.findManyPaginated(this.prisma.department, churchId, params) as Promise<PaginatedResultDto<Department>>;
     }
 }
